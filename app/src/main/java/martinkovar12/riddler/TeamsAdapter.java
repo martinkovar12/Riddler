@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-public class TeamsAdapter  extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> {
+public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> {
 
     private List<Team> m_teams;
 

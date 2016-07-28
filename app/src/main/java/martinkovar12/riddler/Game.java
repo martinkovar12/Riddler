@@ -1,37 +1,30 @@
 package martinkovar12.riddler;
 
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Game extends ActionBarActivity {
 
     public static final String ExtraName_NumberOfTeams = "NumberOfTeams";
-
-
-    private RecyclerView m_recyclerView;
-    private RecyclerView.Adapter m_adapter;
-    private RecyclerView.LayoutManager m_layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
-        Intent intent = getIntent();
-        int numberOfTeams = intent.getIntExtra(ExtraName_NumberOfTeams, 0);
 
-        m_recyclerView = (RecyclerView) findViewById(R.id.activity_game_teams);
-
-        m_layoutManager = new LinearLayoutManager(this);
-        m_recyclerView.setLayoutManager(m_layoutManager);
-
-        // specify an adapter (see also next example)
-        m_adapter = new TeamsAdapter(myDataset);
-        m_recyclerView.setAdapter(m_adapter);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.activity_game_teams);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        RecyclerView.Adapter adapter = new TeamsAdapter(createTeams());
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -48,5 +41,20 @@ public class Game extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private List<Team> createTeams() {
+        Intent intent = getIntent();
+        int numberOfTeams = intent.getIntExtra(ExtraName_NumberOfTeams, 0);
+
+        List<Team> teams = new ArrayList<>(numberOfTeams);
+        for (int i = 0; i < numberOfTeams; i++) {
+            if (i == 0) {
+                teams.add(new Team(i, 0, true));
+            } else {
+                teams.add(new Team(i, 0, false));
+            }
+        }
+        return teams;
     }
 }
