@@ -1,5 +1,6 @@
 package martinkovar12.riddler;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,9 +25,16 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.m_idTextView.setText(m_teams.get(position).getId());
-        holder.m_positionTextView.setText(m_teams.get(position).getPosition());
-        holder.m_onTurnTextView.setText(String.valueOf(m_teams.get(position).isOnTurn()));
+        Team team = m_teams.get(position);
+
+        holder.m_idTextView.setText(String.valueOf(team.getId()));
+        holder.m_positionTextView.setText(String.valueOf(team.getPosition()));
+
+        if (team.isOnTurn()) {
+            holder.itemView.setBackgroundColor(Color.LTGRAY);
+        } else {
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 
     @Override
