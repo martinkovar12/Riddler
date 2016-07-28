@@ -18,13 +18,15 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
 
     @Override
     public TeamsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.my_text_view, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.team_item, parent, false);
         return new ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.mTextView.setText(m_teams.get(position).getId());
+        holder.m_idTextView.setText(m_teams.get(position).getId());
+        holder.m_positionTextView.setText(m_teams.get(position).getPosition());
+        holder.m_onTurnTextView.setText(String.valueOf(m_teams.get(position).isOnTurn()));
     }
 
     @Override
@@ -33,11 +35,15 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView mTextView;
+        public TextView m_idTextView;
+        public TextView m_positionTextView;
+        public TextView m_onTurnTextView;
 
-        public ViewHolder(TextView v) {
+        public ViewHolder(View v) {
             super(v);
-            mTextView = v;
+            m_idTextView = (TextView) v.findViewById(R.id.team_item_id);
+            m_positionTextView = (TextView) v.findViewById(R.id.team_item_position);
+            m_onTurnTextView = (TextView) v.findViewById(R.id.team_item_on_turn);
         }
     }
 }
