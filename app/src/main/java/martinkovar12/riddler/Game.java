@@ -23,7 +23,7 @@ public class Game extends ActionBarActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.activity_game_teams);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerView.Adapter adapter = new TeamsAdapter(createTeams());
+        RecyclerView.Adapter adapter = new TeamsAdapter(this, createTeams());
         recyclerView.setAdapter(adapter);
     }
 
