@@ -39,9 +39,9 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
         holder.m_positionTextView.setText(String.valueOf(team.getPosition()));
 
         if (team.isOnTurn()) {
-            holder.m_startCompoundButton.setEnabled(true);
+            holder.m_startCompoundButton.setVisibility(View.VISIBLE);
         } else {
-            holder.m_startCompoundButton.setEnabled(false);
+            holder.m_startCompoundButton.setVisibility(View.GONE);
         }
     }
 
@@ -52,8 +52,8 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public View m_expander;
-        public int m_expanderOrigHeight;
-        public int m_expanderCurrHeight;
+        public int m_expanderOrigHeight = 0;
+        public int m_expanderCurrHeight = 0;
         public TextView m_idTextView;
         public TextView m_positionTextView;
         public CompoundButton m_startCompoundButton;
@@ -66,8 +66,6 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
         public ViewHolder(View v) {
             super(v);
             m_expander = v.findViewById(R.id.team_item_expander);
-            m_expanderOrigHeight = m_expander.getHeight();
-            m_expanderCurrHeight = m_expander.getHeight();
             m_idTextView = (TextView) v.findViewById(R.id.team_item_id);
             m_positionTextView = (TextView) v.findViewById(R.id.team_item_position);
             m_startCompoundButton = (CompoundButton) v.findViewById(R.id.team_item_start);
@@ -80,14 +78,10 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
             m_startCompoundButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                    if (m_expanderOrigHeight == 0) {
-                        m_expanderOrigHeight = m_expander.getHeight();
-                    }
-
                     if (checked) {
-                        animate(m_expanderOrigHeight, 2 * m_expanderOrigHeight);
+                        expand(2);
                     } else {
-                        animate(m_expanderCurrHeight, m_expanderOrigHeight);
+                        expand(1);
                     }
                 }
             });
@@ -95,15 +89,44 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
             m_prepSkipButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    expand(3);
+                }
+            });
 
+            m_actFailButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    m_startCompoundButton.setChecked(false);
+                }
+            });
+
+            m_actSuccButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    m_startCompoundButton.setChecked(false);
                 }
             });
         }
 
-        private void animate(int oldValue, int newValue) {
-            m_expanderCurrHeight = newValue;
+        private void expand(int level) {
+            ensureHeights();
+            animate(m_expanderCurrHeight, level * m_expanderOrigHeight);
+        }
 
-            ValueAnimator animator = ValueAnimator.ofInt(oldValue, newValue);
+        private void ensureHeights() {
+            if (m_expanderOrigHeight == 0) {
+                m_expanderOrigHeight = m_expander.getHeight();
+            }
+
+            if (m_expanderCurrHeight == 0) {
+                m_expanderCurrHeight = m_expander.getHeight();
+            }
+        }
+
+        private void animate(int oldHeight, int newHeight) {
+            m_expanderCurrHeight = newHeight;
+
+            ValueAnimator animator = ValueAnimator.ofInt(oldHeight, newHeight);
             animator.setDuration(300);
             animator.setInterpolator(new LinearInterpolator());
             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
