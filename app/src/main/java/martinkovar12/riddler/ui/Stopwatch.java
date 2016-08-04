@@ -3,10 +3,9 @@ package martinkovar12.riddler.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import java.util.Calendar;
-
 public class Stopwatch extends Watch {
 
+    //region Constructors
     public Stopwatch(Context context) {
         super(context);
     }
@@ -18,16 +17,17 @@ public class Stopwatch extends Watch {
     public Stopwatch(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
+    //endregion
 
+    //region Overrides
     @Override
-    protected void updateText() {
-        Calendar c = getCalendar(toIntExact(m_elapsedMs));
-        setText(m_format.format(c.getTime()));
+    protected void afterDelay() {
+        updateText(toIntExact(getElapsedMs()));
     }
 
     public void reset() {
         super.reset();
-        Calendar c = getCalendar(0);
-        setText(m_format.format(c.getTime()));
+        updateText(0);
     }
+    //endregion
 }

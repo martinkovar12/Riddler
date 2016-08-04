@@ -3,13 +3,14 @@ package martinkovar12.riddler.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import java.util.Calendar;
-
 public class Countdown extends Watch {
 
+    //region Fields
     private int m_countdownMs;
     private OnCountdownFinishedListener m_onCountdownFinishedListener;
+    //endregion
 
+    //region Constructors
     public Countdown(Context context) {
         super(context);
     }
@@ -21,23 +22,38 @@ public class Countdown extends Watch {
     public Countdown(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
+    //endregion
 
+    //region Properties
     public void setCountdownMs(int countdownMs) {
         m_countdownMs = countdownMs;
+    }
+
+    public OnCountdownFinishedListener getOnCountdownFinishedListener() {
+        return m_onCountdownFinishedListener;
     }
 
     public void setOnCountdownFinishedListener(OnCountdownFinishedListener onCountdownFinishedListener) {
         m_onCountdownFinishedListener = onCountdownFinishedListener;
     }
+    //endregion
 
+    //region Overrides
     @Override
-    protected void updateText() {
-        int remainingMs = m_countdownMs - toIntExact(m_elapsedMs);
-        Calendar c = getCalendar(remainingMs);
-        setText(m_format.format(c.getTime()));
+    protected void afterDelay() {
+        int remainingMs = m_countdownMs - toIntExact(getElapsedMs());
+        if (remainingMs > 0) {
+            updateText(remainingMs);
+        } else {
+            updateText(0);
+            stop();
+        }
     }
+    //endregion
 
+    //region Nested Classes
     public interface OnCountdownFinishedListener {
         void onCountdownFinished(Countdown countdown);
     }
+    //endregion
 }
