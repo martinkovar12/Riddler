@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import martinkovar12.riddler.ui.Countdown;
+import martinkovar12.riddler.ui.CountDownTimerTextView;
 
 public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> {
     private Context m_context;
@@ -59,7 +59,7 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
         public TextView m_idTextView;
         public TextView m_positionTextView;
         public CompoundButton m_startCompoundButton;
-        public Countdown m_prepTextView;
+        public CountDownTimerTextView m_prepTextView;
         public Button m_prepSkipButton;
         public TextView m_actTextView;
         public Button m_actFailButton;
@@ -71,7 +71,7 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
             m_idTextView = (TextView) v.findViewById(R.id.team_item_id);
             m_positionTextView = (TextView) v.findViewById(R.id.team_item_position);
             m_startCompoundButton = (CompoundButton) v.findViewById(R.id.team_item_start);
-            m_prepTextView = (Countdown) v.findViewById(R.id.team_item_preparation);
+            m_prepTextView = (CountDownTimerTextView) v.findViewById(R.id.team_item_preparation);
             m_prepSkipButton = (Button) v.findViewById(R.id.team_item_preparation_skip);
             m_actTextView = (TextView) v.findViewById(R.id.team_item_activity);
             m_actFailButton = (Button) v.findViewById(R.id.team_item_activity_fail);
@@ -82,8 +82,7 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
                 public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                     if (checked) {
                         expand(2);
-                        m_prepTextView.setCountdownMs(3000);
-                        m_prepTextView.start();
+                        m_prepTextView.start(5000, 1000);
                     } else {
                         expand(1);
                     }

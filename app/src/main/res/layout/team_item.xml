@@ -52,11 +52,12 @@
                     android:layout_weight="1"
                     android:text="@string/preparation" />
 
-                <martinkovar12.riddler.ui.Countdown
+                <martinkovar12.riddler.ui.CountDownTimerTextView
                     android:id="@+id/team_item_preparation"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
+
                 <Button
                     android:id="@+id/team_item_preparation_skip"
                     android:layout_width="50dp"
