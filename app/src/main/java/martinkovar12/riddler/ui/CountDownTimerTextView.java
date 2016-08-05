@@ -12,10 +12,13 @@ import java.util.Locale;
 
 public class CountDownTimerTextView extends TextView {
 
-    private static final SimpleDateFormat m_format = new SimpleDateFormat("HH:mm:ss.SSS", Locale.getDefault());
+    //region Constants
+    private static final SimpleDateFormat m_format = new SimpleDateFormat("ss.SSS", Locale.getDefault());
+    //endregion
+
     //region Fields
     private CountDownTimer m_timer;
-    private OnCountdownFinishedListener m_onCountDownFinishedListener;
+    private OnFinishedListener m_onFinishedListener;
     //endregion
 
     //region Constructors
@@ -33,21 +36,18 @@ public class CountDownTimerTextView extends TextView {
     //endregion
 
     //region Properties
-    public OnCountdownFinishedListener getOnCountdownFinishedListener() {
-        return m_onCountDownFinishedListener;
+    public OnFinishedListener getOnFinishedListener() {
+        return m_onFinishedListener;
     }
 
-    public void setOnCountdownFinishedListener(OnCountdownFinishedListener onCountdownFinishedListener) {
-        m_onCountDownFinishedListener = onCountdownFinishedListener;
+    public void setOnFinishedListener(OnFinishedListener onFinishedListener) {
+        m_onFinishedListener = onFinishedListener;
     }
     //endregion
 
     //region Overrides
     public void start(long millisInFuture, long countDownInterval) {
-        if (m_timer != null) {
-            m_timer.cancel();
-            m_timer = null;
-        }
+        cancel();
 
         m_timer = new CountDownTimer(millisInFuture, countDownInterval) {
             @Override
@@ -57,13 +57,21 @@ public class CountDownTimerTextView extends TextView {
 
             @Override
             public void onFinish() {
-                if (m_onCountDownFinishedListener != null) {
-                    m_onCountDownFinishedListener.onCountdownFinished(CountDownTimerTextView.this);
+                updateText(0);
+                if (m_onFinishedListener != null) {
+                    m_onFinishedListener.onFinished(CountDownTimerTextView.this);
                 }
             }
         };
 
         m_timer.start();
+    }
+
+    public void cancel() {
+        if (m_timer != null) {
+            m_timer.cancel();
+            m_timer = null;
+        }
     }
     //endregion
 
@@ -92,8 +100,8 @@ public class CountDownTimerTextView extends TextView {
     //endregion
 
     //region Nested Classes
-    public interface OnCountdownFinishedListener {
-        void onCountdownFinished(CountDownTimerTextView countDownTimerTextView);
+    public interface OnFinishedListener {
+        void onFinished(CountDownTimerTextView countDownTimerTextView);
     }
     //endregion
 }

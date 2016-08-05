@@ -61,7 +61,7 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
         public CompoundButton m_startCompoundButton;
         public CountDownTimerTextView m_prepTextView;
         public Button m_prepSkipButton;
-        public TextView m_actTextView;
+        public CountDownTimerTextView m_actTextView;
         public Button m_actFailButton;
         public Button m_actSuccButton;
 
@@ -73,7 +73,7 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
             m_startCompoundButton = (CompoundButton) v.findViewById(R.id.team_item_start);
             m_prepTextView = (CountDownTimerTextView) v.findViewById(R.id.team_item_preparation);
             m_prepSkipButton = (Button) v.findViewById(R.id.team_item_preparation_skip);
-            m_actTextView = (TextView) v.findViewById(R.id.team_item_activity);
+            m_actTextView = (CountDownTimerTextView) v.findViewById(R.id.team_item_activity);
             m_actFailButton = (Button) v.findViewById(R.id.team_item_activity_fail);
             m_actSuccButton = (Button) v.findViewById(R.id.team_item_activity_succes);
 
@@ -81,10 +81,9 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
                 @Override
                 public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
                     if (checked) {
-                        expand(2);
-                        m_prepTextView.start(5000, 1000);
+                        prepare();
                     } else {
-                        expand(1);
+                        stop();
                     }
                 }
             });
@@ -92,7 +91,7 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
             m_prepSkipButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    expand(3);
+                    riddle();
                 }
             });
 
@@ -111,6 +110,37 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
             });
         }
 
+        private void stop() {
+            setIsRecyclable(true);
+            expand(1);
+            m_prepTextView.cancel();
+            m_actTextView.cancel();
+        }
+
+        private void prepare() {
+            setIsRecyclable(false);
+            expand(2);
+            m_prepTextView.start(3000, 100);
+            m_prepTextView.setOnFinishedListener(new CountDownTimerTextView.OnFinishedListener() {
+                @Override
+                public void onFinished(CountDownTimerTextView countDownTimerTextView) {
+                    riddle();
+                }
+            });
+        }
+
+        private void riddle() {
+            expand(3);
+            m_prepTextView.cancel();
+            m_actTextView.start(5000, 100);
+            m_actTextView.setOnFinishedListener(new CountDownTimerTextView.OnFinishedListener() {
+                @Override
+                public void onFinished(CountDownTimerTextView countDownTimerTextView) {
+                }
+            });
+        }
+
+        //region Expand Methods
         private void expand(int level) {
             ensureHeights();
             animate(m_expanderCurrHeight, level * m_expanderOrigHeight);
@@ -143,5 +173,6 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
             });
             animator.start();
         }
+        //endregion
     }
 }
