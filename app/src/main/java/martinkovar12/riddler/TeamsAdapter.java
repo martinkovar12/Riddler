@@ -68,7 +68,7 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder> 
         public ViewHolder(View v) {
             super(v);
             m_expander = v.findViewById(R.id.team_item_expander);
-            m_idTextView = (TextView) v.findViewById(R.id.team_item_id);
+            m_idTextView = (TextView) v.findViewById(R.id.team_item_name);
             m_positionTextView = (TextView) v.findViewById(R.id.team_item_position);
             m_startCompoundButton = (CompoundButton) v.findViewById(R.id.team_item_start);
             m_prepTextView = (CountDownTimerTextView) v.findViewById(R.id.team_item_preparation);
