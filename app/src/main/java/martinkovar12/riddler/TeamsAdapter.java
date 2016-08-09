@@ -1,6 +1,7 @@
 package martinkovar12.riddler;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,7 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder>
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position)
 	{
-		Team team = m_teams.get(position);
+		final Team team = m_teams.get(position);
 
 		holder.m_nameTextView.setText(String.valueOf(team.getId()));
 		holder.m_positionTextView.setText(String.valueOf(team.getPosition()));
@@ -43,6 +44,16 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder>
 		if (team.isOnTurn())
 		{
 			holder.m_startButton.setVisibility(View.VISIBLE);
+			holder.m_startButton.setOnClickListener(new View.OnClickListener()
+			{
+				@Override
+				public void onClick(View view)
+				{
+					Intent intent = new Intent(m_context, Riddle.class);
+					intent.putExtra(Riddle.ParameterName_Team, team);
+					m_context.startActivity(intent);
+				}
+			});
 		}
 		else
 		{

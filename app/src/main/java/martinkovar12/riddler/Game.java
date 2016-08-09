@@ -13,7 +13,7 @@ import java.util.List;
 
 public class Game extends ActionBarActivity
 {
-	public static final String ExtraName_NumberOfTeams = "NumberOfTeams";
+	public static final String ParameterName_NumberOfTeams = "NumberOfTeams";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -50,7 +50,7 @@ public class Game extends ActionBarActivity
 	private List<Team> createTeams()
 	{
 		Intent intent = getIntent();
-		int numberOfTeams = intent.getIntExtra(ExtraName_NumberOfTeams, 0);
+		int numberOfTeams = intent.getIntExtra(ParameterName_NumberOfTeams, 0);
 
 		List<Team> teams = new ArrayList<>(numberOfTeams);
 		for (int i = 0; i < numberOfTeams; i++)

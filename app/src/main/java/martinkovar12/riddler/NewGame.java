@@ -10,7 +10,6 @@ import android.widget.EditText;
 
 public class NewGame extends ActionBarActivity
 {
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
 	{
@@ -41,7 +40,7 @@ public class NewGame extends ActionBarActivity
 	{
 		EditText numberOfTeamsEditText = (EditText) findViewById(R.id.activity_new_game_number_of_teams);
 		Intent intent = new Intent(this, Game.class);
-		intent.putExtra(Game.ExtraName_NumberOfTeams, Integer.parseInt(numberOfTeamsEditText.getText().toString()));
+		intent.putExtra(Game.ParameterName_NumberOfTeams, Integer.parseInt(numberOfTeamsEditText.getText().toString()));
 		startActivity(intent);
 	}
 }
