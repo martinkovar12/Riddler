@@ -76,12 +76,20 @@
 					</TableRow>
 				</TableLayout>
 
-				<Button
-						android:id="@+id/team_item_start"
+				<LinearLayout
+						android:layout_width="0dp"
+						android:layout_height="wrap_content"
+						android:layout_weight="1"
 						android:layout_gravity="center_vertical"
-						android:layout_width="30dp"
-						android:layout_height="30dp"
-						android:background="@drawable/video_control_play" />
+						android:gravity="end"
+						android:orientation="horizontal">
+
+					<Button
+							android:id="@+id/team_item_start"
+							android:layout_width="30dp"
+							android:layout_height="30dp"
+							android:background="@android:drawable/ic_media_play" />
+				</LinearLayout>
 			</LinearLayout>
 		</LinearLayout>
 	</android.support.v7.widget.CardView>
