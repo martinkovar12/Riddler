@@ -1,7 +1,9 @@
-package martinkovar12.riddler;
+package martinkovar12.riddler.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+
+import martinkovar12.riddler.R;
 
 public class Riddle extends AppCompatActivity
 {

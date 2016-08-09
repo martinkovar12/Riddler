@@ -5,7 +5,7 @@
 		android:id="@+id/activity_riddle"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		tools:context="martinkovar12.riddler.Riddle">
+		tools:context="martinkovar12.riddler.activity.Riddle">
 
 	<ImageView
 			android:layout_width="200dp"

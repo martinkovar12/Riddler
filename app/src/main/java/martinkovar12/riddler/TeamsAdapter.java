@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import martinkovar12.riddler.activity.Riddle;
+
 public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder>
 {
 	private Context m_context;

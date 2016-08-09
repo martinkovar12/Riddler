@@ -1,8 +1,8 @@
-package martinkovar12.riddler;
+package martinkovar12.riddler.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -11,7 +11,11 @@ import android.view.MenuItem;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game extends ActionBarActivity
+import martinkovar12.riddler.R;
+import martinkovar12.riddler.Team;
+import martinkovar12.riddler.TeamsAdapter;
+
+public class Game extends AppCompatActivity
 {
 	public static final String ParameterName_NumberOfTeams = "NumberOfTeams";
 

@@ -1,13 +1,15 @@
-package martinkovar12.riddler;
+package martinkovar12.riddler.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-public class Main extends ActionBarActivity
+import martinkovar12.riddler.R;
+
+public class Main extends AppCompatActivity
 {
 	@Override
 	protected void onCreate(Bundle savedInstanceState)

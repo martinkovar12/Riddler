@@ -7,7 +7,7 @@
 			android:label="@string/app_name"
 			android:theme="@style/AppTheme">
 		<activity
-				android:name=".Main"
+				android:name=".activity.Main"
 				android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
@@ -15,16 +15,14 @@
 			</intent-filter>
 		</activity>
 		<activity
-				android:name=".NewGame"
+				android:name=".activity.NewGame"
 				android:label="@string/title_activity_new_game" />
 		<activity
-				android:name=".LoadGame"
+				android:name=".activity.LoadGame"
 				android:label="@string/title_activity_load_game" />
 		<activity
-				android:name=".Game"
+				android:name=".activity.Game"
 				android:label="@string/title_activity_game" />
-		<activity
-				android:name=".Riddle"
-				android:theme="@android:style/Theme.Dialog" />
+		<activity android:name=".activity.Riddle" />
 	</application>
 </manifest>
