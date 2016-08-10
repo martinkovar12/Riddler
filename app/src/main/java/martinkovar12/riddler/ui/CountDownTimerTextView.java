@@ -48,9 +48,19 @@ public class CountDownTimerTextView extends TextView
 	{
 		m_onFinishedListener = onFinishedListener;
 	}
+
+	public void removeOnFinishedListener()
+	{
+		m_onFinishedListener = null;
+	}
 	//endregion
 
-	//region Overrides
+	//region Public Methods
+	public void start(long millisInFuture)
+	{
+		start(millisInFuture, 100);
+	}
+
 	public void start(long millisInFuture, long countDownInterval)
 	{
 		cancel();
