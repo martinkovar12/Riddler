@@ -4,8 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,9 +20,7 @@ public class Riddle extends AppCompatActivity
 	private Team m_team;
 	private TextView m_timerLabelTextView;
 	private CountDownTimerTextView m_timerTextView;
-	private Button m_skipButton;
-	private Button m_successButton;
-	private Button m_failButton;
+	private Menu m_menu;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -58,23 +56,37 @@ public class Riddle extends AppCompatActivity
 				skipPreparation();
 			}
 		});
-
-		m_skipButton = (Button) findViewById(R.id.activity_riddle_skip);
-		m_successButton = (Button) findViewById(R.id.activity_riddle_success);
-		m_failButton = (Button) findViewById(R.id.activity_riddle_fail);
 	}
 
-	public void onClickSkip(View view)
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
 	{
-		skipPreparation();
+		getMenuInflater().inflate(R.menu.menu_riddle, menu);
+		m_menu = menu;
+		m_menu.findItem(R.id.menu_riddle_success).setVisible(false);
+		m_menu.findItem(R.id.menu_riddle_fail).setVisible(false);
+		return true;
 	}
 
-	public void onClickSuccess(View view)
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
 	{
-	}
+		int itemId = item.getItemId();
+		if (itemId == R.id.menu_riddle_skip)
+		{
+			skipPreparation();
+			return true;
+		}
+		else if (itemId == R.id.menu_riddle_success)
+		{
+			return true;
+		}
+		else if (itemId == R.id.menu_riddle_fail)
+		{
+			return true;
+		}
 
-	public void onClickFail(View view)
-	{
+		return super.onOptionsItemSelected(item);
 	}
 
 	private void skipPreparation()
@@ -89,8 +101,9 @@ public class Riddle extends AppCompatActivity
 			{
 			}
 		});
-		m_skipButton.setVisibility(View.GONE);
-		m_successButton.setVisibility(View.VISIBLE);
-		m_failButton.setVisibility(View.VISIBLE);
+
+		m_menu.findItem(R.id.menu_riddle_skip).setVisible(false);
+		m_menu.findItem(R.id.menu_riddle_success).setVisible(true);
+		m_menu.findItem(R.id.menu_riddle_fail).setVisible(true);
 	}
 }
