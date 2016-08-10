@@ -52,29 +52,5 @@
 				android:layout_height="wrap_content"
 				android:layout_centerHorizontal="true"
 				android:layout_below="@id/activity_riddle_timer_label" />
-
-		<Button
-				android:id="@+id/activity_riddle_skip"
-				android:layout_width="40dp"
-				android:layout_height="40dp"
-				android:background="@android:drawable/ic_media_ff"
-				android:layout_centerVertical="true"
-				android:layout_alignParentRight="true" />
-
-		<Button
-				android:id="@+id/activity_riddle_success"
-				android:layout_width="40dp"
-				android:layout_height="40dp"
-				android:background="@android:drawable/ic_menu_add"
-				android:layout_centerVertical="true"
-				android:layout_alignParentRight="true" />
-
-		<Button
-				android:id="@+id/activity_riddle_fail"
-				android:layout_width="40dp"
-				android:layout_height="40dp"
-				android:background="@android:drawable/ic_menu_close_clear_cancel"
-				android:layout_centerVertical="true"
-				android:layout_toLeftOf="@id/activity_riddle_success" />
 	</RelativeLayout>
 </LinearLayout>

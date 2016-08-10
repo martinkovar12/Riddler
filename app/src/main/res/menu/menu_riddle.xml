@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+		xmlns:app="http://schemas.android.com/apk/res-auto"
+		xmlns:tools="http://schemas.android.com/tools"
+		tools:context="martinkovar12.riddler.activity.Riddle">
+	<item
+			android:id="@+id/menu_riddle_skip"
+			android:title="Skip"
+			android:orderInCategory="100"
+			android:icon="@drawable/ic_fast_forward_white_24dp"
+			app:showAsAction="ifRoom" />
+	<item
+			android:id="@+id/menu_riddle_success"
+			android:title="Success"
+			android:orderInCategory="200"
+			android:icon="@drawable/ic_done_white_24dp"
+			app:showAsAction="ifRoom" />
+	<item
+			android:id="@+id/menu_riddle_fail"
+			android:title="Fail"
+			android:orderInCategory="300"
+			android:icon="@drawable/ic_clear_white_24dp"
+			app:showAsAction="ifRoom" />
+</menu>
