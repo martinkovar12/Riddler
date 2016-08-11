@@ -1,10 +1,16 @@
 package martinkovar12.riddler.sql;
 
+import android.content.ContentValues;
 import android.provider.BaseColumns;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class RiddlerContract
 {
 	//region Constants
+	private static final SimpleDateFormat s_simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
 	private static final String INT = " INTEGER";
 	private static final String REA = " REAL";
 	private static final String TXT = " TEXT";
@@ -16,6 +22,31 @@ public class RiddlerContract
 			SystemColumns._INSERTED_ON + TXT + ',' +
 			SystemColumns._MODIFIED_ON + TXT;
 	//endregion
+
+	//region Methods
+	public static ContentValues createInsertSystemContentValues(String name)
+	{
+		Date now = new Date();
+		String nowFormatted = s_simpleDateFormat.format(now);
+
+		ContentValues values = new ContentValues();
+		values.put(SystemColumns._NAME, name);
+		values.put(SystemColumns._INSERTED_ON, nowFormatted);
+		values.put(SystemColumns._MODIFIED_ON, nowFormatted);
+		values.put(SystemColumns._VALID, 1);
+		return values;
+	}
+	//endregion
+
+	public static ContentValues createUpdateSystemContentValues()
+	{
+		Date now = new Date();
+		String nowFormatted = s_simpleDateFormat.format(now);
+
+		ContentValues values = new ContentValues();
+		values.put(SystemColumns._MODIFIED_ON, nowFormatted);
+		return values;
+	}
 
 	//region Interfaces
 	private interface SystemColumns extends BaseColumns
