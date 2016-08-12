@@ -70,7 +70,12 @@ public class RiddlerContract
 	{
 		public static final String TAB_NAME = "Team";
 		public static final String COL_GAME_ID = "game_id";
-		static final String SQL_CRE = SQL_CRE_TAB + TAB_NAME + " (" + SQL_SYS_COLS + ',' + COL_GAME_ID + INT + ')';
+		public static final String COL_SCORE = "score";
+		public static final String COL_IS_ON_TURN = "is_on_turn";
+		static final String SQL_CRE = SQL_CRE_TAB + TAB_NAME + " (" + SQL_SYS_COLS + ',' +
+				COL_GAME_ID + INT + ',' +
+				COL_SCORE + INT + ',' +
+				COL_IS_ON_TURN + INT + ')';
 		static final String SQL_DRO = SQL_DRO_TAB + TAB_NAME;
 	}
 	//endregion

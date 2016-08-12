@@ -44,16 +44,29 @@ public class NewGame extends AppCompatActivity
 
 	public void start(View view)
 	{
-		EditText numberOfTeamsEditText = (EditText) findViewById(R.id.activity_new_game_number_of_teams);
-		int numberOfTeams = Integer.parseInt(numberOfTeamsEditText.getText().toString());
-
 		RiddlerDbHelper dbHelper = new RiddlerDbHelper(this);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		ContentValues values = RiddlerContract.createInsertSystemContentValues("A Team");
-		long teamId = db.insert(RiddlerContract.Team.TAB_NAME, null, values);
+
+		ContentValues values = RiddlerContract.createInsertSystemContentValues("Game");
+		long gameId = db.insert(RiddlerContract.Game.TAB_NAME, null, values);
+
+		for (int i = 1; i <= getNumberOfTeams(); i++)
+		{
+			values = RiddlerContract.createInsertSystemContentValues("Team " + i);
+			values.put(RiddlerContract.Team.COL_GAME_ID, gameId);
+			values.put(RiddlerContract.Team.COL_SCORE, 0);
+			values.put(RiddlerContract.Team.COL_IS_ON_TURN, i == 1 ? 1 : 0); // First team is on turn.
+			db.insert(RiddlerContract.Team.TAB_NAME, null, values);
+		}
 
 		Intent intent = new Intent(this, Game.class);
-		intent.putExtra(Game.ParameterName_NumberOfTeams, numberOfTeams);
+		intent.putExtra(Game.ParameterName_GameId, gameId);
 		startActivity(intent);
+	}
+
+	private int getNumberOfTeams()
+	{
+		EditText numberOfTeamsEditText = (EditText) findViewById(R.id.activity_new_game_number_of_teams);
+		return Integer.parseInt(numberOfTeamsEditText.getText().toString());
 	}
 }

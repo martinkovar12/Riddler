@@ -17,7 +17,7 @@ import martinkovar12.riddler.TeamsAdapter;
 
 public class Game extends AppCompatActivity
 {
-	public static final String ParameterName_NumberOfTeams = "NumberOfTeams";
+	public static final String ParameterName_GameId = "GameId";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState)
@@ -28,7 +28,7 @@ public class Game extends AppCompatActivity
 		RecyclerView recyclerView = (RecyclerView) findViewById(R.id.activity_game_teams);
 		RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
 		recyclerView.setLayoutManager(layoutManager);
-		RecyclerView.Adapter adapter = new TeamsAdapter(this, createTeams());
+		RecyclerView.Adapter adapter = new TeamsAdapter(this, initializeTeams());
 		recyclerView.setAdapter(adapter);
 	}
 
@@ -51,11 +51,16 @@ public class Game extends AppCompatActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	private List<Team> createTeams()
+	private List<Team> initializeTeams()
 	{
 		Intent intent = getIntent();
-		int numberOfTeams = intent.getIntExtra(ParameterName_NumberOfTeams, 0);
+		int numberOfTeams = intent.getIntExtra(ParameterName_GameId, -1);
+		if (numberOfTeams == -1)
+		{
+			throw new IllegalStateException("Unable to get gameId.");
+		}
 
+		//TODO load teams from database and translate
 		List<Team> teams = new ArrayList<>(numberOfTeams);
 		for (int i = 0; i < numberOfTeams; i++)
 		{
