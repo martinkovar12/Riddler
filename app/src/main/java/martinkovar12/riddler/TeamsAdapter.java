@@ -41,7 +41,7 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder>
 		final TeamEntity team = m_teams.get(position);
 
 		holder.m_nameTextView.setText(String.valueOf(team.getId()));
-		holder.m_positionTextView.setText(String.valueOf(team.getPosition()));
+		holder.m_positionTextView.setText(String.valueOf(team.getScore()));
 		holder.m_scoreTextView.setText(String.valueOf(team.getScore()));
 
 		if (team.isOnTurn())
@@ -53,7 +53,7 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder>
 				public void onClick(View view)
 				{
 					Intent intent = new Intent(m_context, Riddle.class);
-					intent.putExtra(Riddle.ParameterName_Team, team);
+					//intent.putExtra(Riddle.ParameterName_Team, team);
 					m_context.startActivity(intent);
 				}
 			});

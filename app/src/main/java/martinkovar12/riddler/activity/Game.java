@@ -61,18 +61,6 @@ public class Game extends AppCompatActivity
 		}
 
 		//TODO load teams from database and translate
-		List<TeamEntity> teams = new ArrayList<>(numberOfTeams);
-		for (int i = 0; i < numberOfTeams; i++)
-		{
-			if (i == 0)
-			{
-				teams.add(new TeamEntity(i, 0, 0, true));
-			}
-			else
-			{
-				teams.add(new TeamEntity(i, 0, 0, false));
-			}
-		}
-		return teams;
+		return new ArrayList<>(numberOfTeams);
 	}
 }

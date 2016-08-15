@@ -2,10 +2,70 @@ package martinkovar12.riddler.model;
 
 import android.provider.BaseColumns;
 
-public class BaseEntity implements BaseColumns
+public class BaseEntity
 {
+	//region Fields
+	@Column(name = BaseColumns._ID)
+	private int m_id;
+	@Column(name = "name")
 	private String m_name;
-	private String m_inserted_on;
-	private String m_modified_on;
+	@Column(name = "insertedOn")
+	private String m_insertedOn;
+	@Column(name = "modifiedOn")
+	private String m_modifiedOn;
+	@Column(name = "valid")
 	private int m_valid;
+	//endregion
+
+	//region Methods
+	public int getId()
+	{
+		return m_id;
+	}
+
+	public void setId(int id)
+	{
+		m_id = id;
+	}
+
+	public String getName()
+	{
+		return m_name;
+	}
+
+	public void setName(String name)
+	{
+		m_name = name;
+	}
+
+	public String getInsertedOn()
+	{
+		return m_insertedOn;
+	}
+
+	public void setInsertedOn(String insertedOn)
+	{
+		m_insertedOn = insertedOn;
+	}
+
+	public String getModifiedOn()
+	{
+		return m_modifiedOn;
+	}
+
+	public void setModifiedOn(String modifiedOn)
+	{
+		m_modifiedOn = modifiedOn;
+	}
+
+	public int getValid()
+	{
+		return m_valid;
+	}
+
+	public void setValid(int valid)
+	{
+		m_valid = valid;
+	}
+	//endregion
 }
