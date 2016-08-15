@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import martinkovar12.riddler.R;
-import martinkovar12.riddler.Team;
 import martinkovar12.riddler.TeamsAdapter;
+import martinkovar12.riddler.model.TeamEntity;
 
 public class Game extends AppCompatActivity
 {
@@ -51,7 +51,7 @@ public class Game extends AppCompatActivity
 		return super.onOptionsItemSelected(item);
 	}
 
-	private List<Team> initializeTeams()
+	private List<TeamEntity> initializeTeams()
 	{
 		Intent intent = getIntent();
 		int numberOfTeams = intent.getIntExtra(ParameterName_GameId, -1);
@@ -61,16 +61,16 @@ public class Game extends AppCompatActivity
 		}
 
 		//TODO load teams from database and translate
-		List<Team> teams = new ArrayList<>(numberOfTeams);
+		List<TeamEntity> teams = new ArrayList<>(numberOfTeams);
 		for (int i = 0; i < numberOfTeams; i++)
 		{
 			if (i == 0)
 			{
-				teams.add(new Team(i, 0, 0, true));
+				teams.add(new TeamEntity(i, 0, 0, true));
 			}
 			else
 			{
-				teams.add(new Team(i, 0, 0, false));
+				teams.add(new TeamEntity(i, 0, 0, false));
 			}
 		}
 		return teams;

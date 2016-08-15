@@ -12,15 +12,16 @@ import android.widget.TextView;
 import java.util.List;
 
 import martinkovar12.riddler.activity.Riddle;
+import martinkovar12.riddler.model.TeamEntity;
 
 public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder>
 {
 	private Context m_context;
-	private List<Team> m_teams;
+	private List<TeamEntity> m_teams;
 	private LayoutInflater m_inflater;
 
 
-	public TeamsAdapter(Context context, List<Team> teams)
+	public TeamsAdapter(Context context, List<TeamEntity> teams)
 	{
 		m_context = context;
 		m_teams = teams;
@@ -37,7 +38,7 @@ public class TeamsAdapter extends RecyclerView.Adapter<TeamsAdapter.ViewHolder>
 	@Override
 	public void onBindViewHolder(ViewHolder holder, int position)
 	{
-		final Team team = m_teams.get(position);
+		final TeamEntity team = m_teams.get(position);
 
 		holder.m_nameTextView.setText(String.valueOf(team.getId()));
 		holder.m_positionTextView.setText(String.valueOf(team.getPosition()));

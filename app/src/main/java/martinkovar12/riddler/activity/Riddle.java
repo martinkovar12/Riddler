@@ -10,14 +10,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import martinkovar12.riddler.R;
-import martinkovar12.riddler.Team;
+import martinkovar12.riddler.model.TeamEntity;
 import martinkovar12.riddler.ui.CountDownTimerTextView;
 
 public class Riddle extends AppCompatActivity
 {
 	public static final String ParameterName_Team = "Team";
 
-	private Team m_team;
+	private TeamEntity m_team;
 	private TextView m_timerLabelTextView;
 	private CountDownTimerTextView m_timerTextView;
 	private Menu m_menu;
@@ -30,9 +30,9 @@ public class Riddle extends AppCompatActivity
 
 		Intent intent = getIntent();
 		Parcelable parcelable = intent.getParcelableExtra(ParameterName_Team);
-		if (parcelable instanceof Team)
+		if (parcelable instanceof TeamEntity)
 		{
-			m_team = (Team) parcelable;
+			m_team = (TeamEntity) parcelable;
 		}
 		else
 		{
