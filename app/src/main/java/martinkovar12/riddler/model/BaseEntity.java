@@ -2,7 +2,7 @@ package martinkovar12.riddler.model;
 
 import android.provider.BaseColumns;
 
-public class BaseEntity
+public abstract class BaseEntity
 {
 	//region Fields
 	@Column(name = BaseColumns._ID)
@@ -15,6 +15,13 @@ public class BaseEntity
 	private String m_modifiedOn;
 	@Column(name = "valid")
 	private int m_valid;
+	//endregion
+
+	//region Constructors
+	public BaseEntity()
+	{
+		m_valid = 1;
+	}
 	//endregion
 
 	//region Methods
