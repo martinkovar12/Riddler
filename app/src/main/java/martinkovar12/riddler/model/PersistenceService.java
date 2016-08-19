@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
+import android.support.annotation.NonNull;
 
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -17,11 +18,27 @@ public class PersistenceService
 {
 	private static final SimpleDateFormat s_simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
 
-	public void query(Context context, Class<? extends BaseEntity> clazz)
+	public void query(Context context, Class<? extends BaseEntity> clazz, String whereClause, String[] whereArgs)
 	{
 		BaseSQLiteOpenHelper helper = new BaseSQLiteOpenHelper(context);
 		SQLiteDatabase database = helper.getReadableDatabase();
-		Cursor cursor = database.rawQuery();
+		String sql = createSelectProjectionTable(clazz) + whereClause;
+		Cursor cursor = database.rawQuery(sql, whereArgs);
+	}
+
+	protected String createSelectProjectionTable(Class<? extends BaseEntity> clazz)
+	{
+		StringBuilder sb = new StringBuilder();
+		sb.append("SELECT ");
+		String[] projection = getProjection(clazz);
+		for (String columnName : projection)
+		{
+			sb.append("it.").append(columnName).append(",");
+		}
+
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append(" FROM ").append(getTable(clazz)).append(" AS it ");
+		return sb.toString();
 	}
 
 	public long insert(Context context, BaseEntity baseEntity)
@@ -51,9 +68,16 @@ public class PersistenceService
 		return database.update(table, values, whereClause, whereArgs);
 	}
 
+	@NonNull
 	protected String getTable(BaseEntity baseEntity)
 	{
 		Class<? extends BaseEntity> clazz = baseEntity.getClass();
+		return getTable(clazz);
+	}
+
+	@NonNull
+	protected String getTable(Class<? extends BaseEntity> clazz)
+	{
 		Table table = clazz.getAnnotation(Table.class);
 		return table.name();
 	}
