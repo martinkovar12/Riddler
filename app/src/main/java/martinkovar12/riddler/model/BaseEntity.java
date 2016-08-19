@@ -2,6 +2,8 @@ package martinkovar12.riddler.model;
 
 import android.provider.BaseColumns;
 
+import java.util.Date;
+
 public abstract class BaseEntity
 {
 	//region Fields
@@ -10,9 +12,9 @@ public abstract class BaseEntity
 	@Column(name = "name")
 	private String m_name;
 	@Column(name = "insertedOn")
-	private String m_insertedOn;
+	private Date m_insertedOn;
 	@Column(name = "modifiedOn")
-	private String m_modifiedOn;
+	private Date m_modifiedOn;
 	@Column(name = "valid")
 	private int m_valid;
 	//endregion
@@ -45,22 +47,22 @@ public abstract class BaseEntity
 		m_name = name;
 	}
 
-	public String getInsertedOn()
+	public Date getInsertedOn()
 	{
 		return m_insertedOn;
 	}
 
-	public void setInsertedOn(String insertedOn)
+	public void setInsertedOn(Date insertedOn)
 	{
 		m_insertedOn = insertedOn;
 	}
 
-	public String getModifiedOn()
+	public Date getModifiedOn()
 	{
 		return m_modifiedOn;
 	}
 
-	public void setModifiedOn(String modifiedOn)
+	public void setModifiedOn(Date modifiedOn)
 	{
 		m_modifiedOn = modifiedOn;
 	}

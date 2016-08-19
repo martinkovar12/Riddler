@@ -14,7 +14,7 @@ public class BaseSQLiteOpenHelperTest
 	Context m_context;
 
 	@Test
-	public void test()
+	public void testCreateStatements()
 	{
 		BaseSQLiteOpenHelper helper = new BaseSQLiteOpenHelper(m_context);
 		for (Class clazz : helper.getEntityClasses())

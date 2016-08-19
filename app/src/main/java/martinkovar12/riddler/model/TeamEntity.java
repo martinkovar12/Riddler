@@ -12,10 +12,15 @@ public class TeamEntity extends BaseEntity
 	private boolean m_onTurn;
 	//endregion
 
-	//region Getters
+	//region Properties
 	public int getGameId()
 	{
 		return m_gameId;
+	}
+
+	public void setGameId(int gameId)
+	{
+		m_gameId = gameId;
 	}
 
 	public int getScore()
@@ -23,9 +28,19 @@ public class TeamEntity extends BaseEntity
 		return m_score;
 	}
 
+	public void setScore(int score)
+	{
+		m_score = score;
+	}
+
 	public boolean isOnTurn()
 	{
 		return m_onTurn;
+	}
+
+	public void setOnTurn(boolean onTurn)
+	{
+		m_onTurn = onTurn;
 	}
 	//endregion
 }

@@ -8,6 +8,7 @@ import android.provider.BaseColumns;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class BaseSQLiteOpenHelper extends SQLiteOpenHelper
 {
@@ -86,7 +87,7 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper
 				{
 					sb.append(" INTEGER,");
 				}
-				else if (type.equals(String.class))
+				else if (type.equals(String.class) || type.equals(Date.class))
 				{
 					sb.append(" TEXT,");
 				}
