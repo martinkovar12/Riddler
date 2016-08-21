@@ -22,22 +22,34 @@ public class PersistenceService
 	{
 		BaseSQLiteOpenHelper helper = new BaseSQLiteOpenHelper(context);
 		SQLiteDatabase database = helper.getReadableDatabase();
-		String sql = createSelectProjectionTable(clazz) + whereClause;
+		String table = getTable(clazz);
+		String[] projection = getProjection(clazz);
+		String sql = createSelectProjectionTable(table, projection) + whereClause;
 		Cursor cursor = database.rawQuery(sql, whereArgs);
+		try
+		{
+			while (cursor.moveToNext())
+			{
+				long id = cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID));
+			}
+		}
+		finally
+		{
+			cursor.close();
+		}
 	}
 
-	protected String createSelectProjectionTable(Class<? extends BaseEntity> clazz)
+	protected String createSelectProjectionTable(String table, String[] projection)
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append("SELECT ");
-		String[] projection = getProjection(clazz);
 		for (String columnName : projection)
 		{
 			sb.append("it.").append(columnName).append(",");
 		}
 
 		sb.deleteCharAt(sb.length() - 1);
-		sb.append(" FROM ").append(getTable(clazz)).append(" AS it ");
+		sb.append(" FROM ").append(table).append(" AS it ");
 		return sb.toString();
 	}
 
