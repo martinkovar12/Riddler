@@ -18,7 +18,7 @@ import java.util.Locale;
 
 public class PersistenceService
 {
-	private static final SimpleDateFormat s_simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
+	protected static final SimpleDateFormat s_simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
 
 	@NonNull
 	public <T extends BaseColumns> T[] query(Context context, Class<T> clazz, String whereClause, String[] whereArgs)
@@ -56,7 +56,7 @@ public class PersistenceService
 	}
 
 	@NonNull
-	private <T extends BaseColumns> T newEntity(Class<T> clazz)
+	protected <T extends BaseColumns> T newEntity(Class<T> clazz)
 	{
 		try
 		{
@@ -74,7 +74,7 @@ public class PersistenceService
 		throw new IllegalStateException("Unable to instantiate new entity: " + clazz.getSimpleName());
 	}
 
-	private void setField(Cursor cursor, Object entity, Field field)
+	protected void setField(Cursor cursor, Object entity, Field field)
 	{
 		final Column column = field.getAnnotation(Column.class);
 		final String columnName = column.name();
@@ -125,7 +125,7 @@ public class PersistenceService
 	}
 
 	@NonNull
-	private String createSelectProjectionTable(Class clazz)
+	protected String createSelectProjectionTable(Class clazz)
 	{
 		final String table = getTable(clazz);
 		final String[] projection = getProjection(clazz);
@@ -169,21 +169,21 @@ public class PersistenceService
 	}
 
 	@NonNull
-	private String getTable(BaseEntity baseEntity)
+	protected String getTable(BaseEntity baseEntity)
 	{
 		Class<? extends BaseEntity> clazz = baseEntity.getClass();
 		return getTable(clazz);
 	}
 
 	@NonNull
-	private String getTable(Class clazz)
+	protected String getTable(Class clazz)
 	{
 		Table table = (Table) clazz.getAnnotation(Table.class);
 		return table.name();
 	}
 
 	@NonNull
-	private ContentValues getValues(BaseEntity baseEntity)
+	protected ContentValues getValues(BaseEntity baseEntity)
 	{
 		ContentValues values = new ContentValues();
 		Class<? extends BaseEntity> clazz = baseEntity.getClass();
@@ -233,7 +233,7 @@ public class PersistenceService
 		return values;
 	}
 
-	private String[] getProjection(Class clazz)
+	protected String[] getProjection(Class clazz)
 	{
 		List<String> list = new ArrayList<>();
 		for (Field field : clazz.getDeclaredFields())
@@ -249,7 +249,7 @@ public class PersistenceService
 		return list.toArray(projection);
 	}
 
-	private Object getValue(BaseEntity baseEntity, Field field)
+	protected Object getValue(BaseEntity baseEntity, Field field)
 	{
 		try
 		{
