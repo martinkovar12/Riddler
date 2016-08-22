@@ -4,11 +4,11 @@ import android.provider.BaseColumns;
 
 import java.util.Date;
 
-public abstract class BaseEntity
+public abstract class BaseEntity implements BaseColumns
 {
 	//region Fields
-	@Column(name = BaseColumns._ID)
-	private int m_id;
+	@Column(name = _ID)
+	private long m_id;
 	@Column(name = "name")
 	private String m_name;
 	@Column(name = "insertedOn")
@@ -27,12 +27,12 @@ public abstract class BaseEntity
 	//endregion
 
 	//region Methods
-	public int getId()
+	public long getId()
 	{
 		return m_id;
 	}
 
-	public void setId(int id)
+	public void setId(long id)
 	{
 		m_id = id;
 	}

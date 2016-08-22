@@ -7,7 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,30 +20,116 @@ public class PersistenceService
 {
 	private static final SimpleDateFormat s_simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
 
-	public void query(Context context, Class<? extends BaseEntity> clazz, String whereClause, String[] whereArgs)
+	@NonNull
+	public <T extends BaseColumns> T[] query(Context context, Class<T> clazz, String whereClause, String[] whereArgs)
 	{
 		BaseSQLiteOpenHelper helper = new BaseSQLiteOpenHelper(context);
 		SQLiteDatabase database = helper.getReadableDatabase();
-		String table = getTable(clazz);
-		String[] projection = getProjection(clazz);
-		String sql = createSelectProjectionTable(table, projection) + whereClause;
+		String sql = createSelectProjectionTable(clazz) + whereClause;
 		Cursor cursor = database.rawQuery(sql, whereArgs);
+		List<T> list = new ArrayList<>();
+
 		try
 		{
 			while (cursor.moveToNext())
 			{
-				long id = cursor.getLong(cursor.getColumnIndexOrThrow(BaseColumns._ID));
+				T entity = newEntity(clazz);
+				for (Field field : clazz.getDeclaredFields())
+				{
+					if (field.isAnnotationPresent(Column.class))
+					{
+						setField(cursor, entity, field);
+					}
+				}
+
+				list.add(entity);
 			}
 		}
 		finally
 		{
 			cursor.close();
 		}
+
+		@SuppressWarnings("unchecked")
+		T[] array = (T[]) Array.newInstance(clazz, list.size());
+		return list.toArray(array);
 	}
 
-	protected String createSelectProjectionTable(String table, String[] projection)
+	@NonNull
+	private <T extends BaseColumns> T newEntity(Class<T> clazz)
 	{
-		StringBuilder sb = new StringBuilder();
+		try
+		{
+			return clazz.newInstance();
+		}
+		catch (InstantiationException e)
+		{
+			e.printStackTrace();
+		}
+		catch (IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+
+		throw new IllegalStateException("Unable to instantiate new entity: " + clazz.getSimpleName());
+	}
+
+	private void setField(Cursor cursor, Object entity, Field field)
+	{
+		final Column column = field.getAnnotation(Column.class);
+		final String columnName = column.name();
+		final int columnIndex = cursor.getColumnIndexOrThrow(columnName);
+		final Class<?> fieldType = field.getType();
+		Object fieldValue = null;
+
+		if (fieldType.equals(int.class) || fieldType.equals(Integer.class))
+		{
+			fieldValue = cursor.getInt(columnIndex);
+		}
+		else if (fieldType.equals(long.class) || fieldType.equals(Long.class))
+		{
+			fieldValue = cursor.getLong(columnIndex);
+		}
+		else if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class))
+		{
+			fieldValue = cursor.getInt(columnIndex) == 1;
+		}
+		else if (fieldType.equals(String.class))
+		{
+			fieldValue = cursor.getString(columnIndex);
+		}
+		else if (fieldType.equals(Date.class))
+		{
+			try
+			{
+				fieldValue = s_simpleDateFormat.parse(cursor.getString(columnIndex));
+			}
+			catch (ParseException e)
+			{
+				e.printStackTrace();
+			}
+		}
+		else
+		{
+			throw new IllegalStateException("Column '" + columnName + "' has invalid type: " + fieldType);
+		}
+
+		try
+		{
+			field.set(entity, fieldValue);
+		}
+		catch (IllegalAccessException e)
+		{
+			e.printStackTrace();
+		}
+	}
+
+	@NonNull
+	private String createSelectProjectionTable(Class clazz)
+	{
+		final String table = getTable(clazz);
+		final String[] projection = getProjection(clazz);
+		final StringBuilder sb = new StringBuilder();
 		sb.append("SELECT ");
 		for (String columnName : projection)
 		{
@@ -81,20 +169,21 @@ public class PersistenceService
 	}
 
 	@NonNull
-	protected String getTable(BaseEntity baseEntity)
+	private String getTable(BaseEntity baseEntity)
 	{
 		Class<? extends BaseEntity> clazz = baseEntity.getClass();
 		return getTable(clazz);
 	}
 
 	@NonNull
-	protected String getTable(Class<? extends BaseEntity> clazz)
+	private String getTable(Class clazz)
 	{
-		Table table = clazz.getAnnotation(Table.class);
+		Table table = (Table) clazz.getAnnotation(Table.class);
 		return table.name();
 	}
 
-	protected ContentValues getValues(BaseEntity baseEntity)
+	@NonNull
+	private ContentValues getValues(BaseEntity baseEntity)
 	{
 		ContentValues values = new ContentValues();
 		Class<? extends BaseEntity> clazz = baseEntity.getClass();
@@ -121,11 +210,11 @@ public class PersistenceService
 				}
 				else if (type.equals(boolean.class))
 				{
-					values.put(name, (boolean) value);
+					values.put(name, (boolean) value ? 1 : 0);
 				}
 				else if (type.equals(Boolean.class))
 				{
-					values.put(name, (Boolean) value);
+					values.put(name, (Boolean) value ? 1 : 0);
 				}
 				else if (type.equals(String.class))
 				{
@@ -144,7 +233,7 @@ public class PersistenceService
 		return values;
 	}
 
-	protected String[] getProjection(Class<? extends BaseEntity> clazz)
+	private String[] getProjection(Class clazz)
 	{
 		List<String> list = new ArrayList<>();
 		for (Field field : clazz.getDeclaredFields())
@@ -160,7 +249,7 @@ public class PersistenceService
 		return list.toArray(projection);
 	}
 
-	protected Object getValue(BaseEntity baseEntity, Field field)
+	private Object getValue(BaseEntity baseEntity, Field field)
 	{
 		try
 		{
