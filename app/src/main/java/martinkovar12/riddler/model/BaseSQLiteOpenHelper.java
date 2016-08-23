@@ -7,7 +7,6 @@ import android.provider.BaseColumns;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.Date;
 
 public class BaseSQLiteOpenHelper extends SQLiteOpenHelper
@@ -45,11 +44,9 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper
 	//endregion
 
 	//region Methods
-	protected Iterable<Class> getEntityClasses()
+	protected Class[] getEntityClasses()
 	{
-		ArrayList<Class> classes = new ArrayList<>();
-		classes.add(TeamEntity.class);
-		return classes;
+		return new Class[] {TeamEntity.class};
 	}
 
 	protected String getCreateTableStatement(Class clazz)
@@ -58,32 +55,32 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper
 		StringBuilder sb = new StringBuilder();
 		sb.append("CREATE TABLE ").append(table.name()).append(" (");
 
-		while (clazz != null)
-		{
-			addColumns(clazz, sb);
-			clazz = clazz.getSuperclass();
-		}
+		appendColumns(clazz, sb);
 
 		sb.deleteCharAt(sb.length() - 1);
 		sb.append(")");
 		return sb.toString();
 	}
 
-	protected void addColumns(Class clazz, StringBuilder sb)
+	protected void appendColumns(Class clazz, StringBuilder sb)
 	{
-		for (Field field : clazz.getDeclaredFields())
+		Field[] fields = ClassHelper.getAllDeclaredFields(clazz);
+		for (Field field : fields)
 		{
 			if (field.isAnnotationPresent(Column.class))
 			{
 				Column column = field.getAnnotation(Column.class);
 				String name = column.name();
-				Class<?> type = field.getType();
 				sb.append(name);
 				if (BaseColumns._ID.equals(name))
 				{
 					sb.append(" INTEGER PRIMARY KEY,");
+					continue;
 				}
-				else if (type.equals(int.class) || type.equals(Integer.class) || type.equals(boolean.class) || type.equals(Boolean.class))
+
+				Class<?> type = field.getType();
+				if (type.equals(int.class) || type.equals(Integer.class)
+						|| type.equals(boolean.class) || type.equals(Boolean.class))
 				{
 					sb.append(" INTEGER,");
 				}
