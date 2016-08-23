@@ -7,7 +7,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -21,11 +20,14 @@ public class PersistenceService
 	protected static final SimpleDateFormat s_simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.getDefault());
 
 	@NonNull
-	public <T extends BaseColumns> T[] query(Context context, Class<T> clazz, String whereClause, String[] whereArgs)
+	public <T> List<T> query(Context context, Class<T> clazz, String whereClause, String[] whereArgs)
 	{
 		BaseSQLiteOpenHelper helper = new BaseSQLiteOpenHelper(context);
 		SQLiteDatabase database = helper.getReadableDatabase();
-		String sql = createSelectProjectionTable(clazz) + whereClause;
+
+		String tableName = getTableName(clazz);
+		Field[] fields = ClassHelper.getAllDeclaredFields(clazz);
+		String sql = createSelectStatement(tableName, fields) + whereClause;
 		Cursor cursor = database.rawQuery(sql, whereArgs);
 		List<T> list = new ArrayList<>();
 
@@ -33,8 +35,8 @@ public class PersistenceService
 		{
 			while (cursor.moveToNext())
 			{
-				T entity = newEntity(clazz);
-				for (Field field : clazz.getDeclaredFields())
+				T entity = instantiateNewEntity(clazz);
+				for (Field field : fields)
 				{
 					if (field.isAnnotationPresent(Column.class))
 					{
@@ -50,13 +52,33 @@ public class PersistenceService
 			cursor.close();
 		}
 
-		@SuppressWarnings("unchecked")
-		T[] array = (T[]) Array.newInstance(clazz, list.size());
-		return list.toArray(array);
+		return list;
+	}
+
+
+	@NonNull
+	protected String createSelectStatement(String tableName, Field[] fields)
+	{
+		final StringBuilder sb = new StringBuilder();
+		sb.append("SELECT ");
+
+		for (Field field : fields)
+		{
+			if (field.isAnnotationPresent(Column.class))
+			{
+				Column column = field.getAnnotation(Column.class);
+				String columnName = column.name();
+				sb.append("it.").append(columnName).append(",");
+			}
+		}
+
+		sb.deleteCharAt(sb.length() - 1);
+		sb.append(" FROM ").append(tableName).append(" AS it ");
+		return sb.toString();
 	}
 
 	@NonNull
-	protected <T extends BaseColumns> T newEntity(Class<T> clazz)
+	protected <T> T instantiateNewEntity(Class<T> clazz)
 	{
 		try
 		{
@@ -85,10 +107,6 @@ public class PersistenceService
 		if (fieldType.equals(int.class) || fieldType.equals(Integer.class))
 		{
 			fieldValue = cursor.getInt(columnIndex);
-		}
-		else if (fieldType.equals(long.class) || fieldType.equals(Long.class))
-		{
-			fieldValue = cursor.getLong(columnIndex);
 		}
 		else if (fieldType.equals(boolean.class) || fieldType.equals(Boolean.class))
 		{
@@ -124,23 +142,6 @@ public class PersistenceService
 		}
 	}
 
-	@NonNull
-	protected String createSelectProjectionTable(Class clazz)
-	{
-		final String table = getTable(clazz);
-		final String[] projection = getProjection(clazz);
-		final StringBuilder sb = new StringBuilder();
-		sb.append("SELECT ");
-		for (String columnName : projection)
-		{
-			sb.append("it.").append(columnName).append(",");
-		}
-
-		sb.deleteCharAt(sb.length() - 1);
-		sb.append(" FROM ").append(table).append(" AS it ");
-		return sb.toString();
-	}
-
 	public long insert(Context context, BaseEntity baseEntity)
 	{
 		Date now = new Date();
@@ -149,9 +150,10 @@ public class PersistenceService
 
 		BaseSQLiteOpenHelper helper = new BaseSQLiteOpenHelper(context);
 		SQLiteDatabase database = helper.getWritableDatabase();
-		String table = getTable(baseEntity);
+
+		String tableName = getTableName(baseEntity);
 		ContentValues values = getValues(baseEntity);
-		return database.insert(table, null, values);
+		return database.insert(tableName, null, values);
 	}
 
 	public long update(Context context, BaseEntity baseEntity)
@@ -161,22 +163,22 @@ public class PersistenceService
 
 		BaseSQLiteOpenHelper helper = new BaseSQLiteOpenHelper(context);
 		SQLiteDatabase database = helper.getWritableDatabase();
-		String table = getTable(baseEntity);
+
+		String tableName = getTableName(baseEntity);
 		ContentValues values = getValues(baseEntity);
 		String whereClause = BaseColumns._ID + " = ?";
 		String[] whereArgs = {String.valueOf(baseEntity.getId())};
-		return database.update(table, values, whereClause, whereArgs);
+		return database.update(tableName, values, whereClause, whereArgs);
 	}
 
 	@NonNull
-	protected String getTable(BaseEntity baseEntity)
+	protected String getTableName(BaseEntity baseEntity)
 	{
-		Class<? extends BaseEntity> clazz = baseEntity.getClass();
-		return getTable(clazz);
+		return getTableName(baseEntity.getClass());
 	}
 
 	@NonNull
-	protected String getTable(Class clazz)
+	protected String getTableName(Class clazz)
 	{
 		Table table = (Table) clazz.getAnnotation(Table.class);
 		return table.name();
@@ -186,8 +188,8 @@ public class PersistenceService
 	protected ContentValues getValues(BaseEntity baseEntity)
 	{
 		ContentValues values = new ContentValues();
-		Class<? extends BaseEntity> clazz = baseEntity.getClass();
-		for (Field field : clazz.getDeclaredFields())
+		Field[] fields = ClassHelper.getAllDeclaredFields(baseEntity.getClass());
+		for (Field field : fields)
 		{
 			if (field.isAnnotationPresent(Column.class))
 			{
@@ -226,27 +228,11 @@ public class PersistenceService
 				}
 				else
 				{
-					throw new IllegalStateException("Column '" + name + "' has invalid type: " + type);
+					throw new IllegalStateException("Column '" + name + "' has unsupported type: " + type);
 				}
 			}
 		}
 		return values;
-	}
-
-	protected String[] getProjection(Class clazz)
-	{
-		List<String> list = new ArrayList<>();
-		for (Field field : clazz.getDeclaredFields())
-		{
-			if (field.isAnnotationPresent(Column.class))
-			{
-				Column column = field.getAnnotation(Column.class);
-				list.add(column.name());
-			}
-		}
-
-		String[] projection = new String[list.size()];
-		return list.toArray(projection);
 	}
 
 	protected Object getValue(BaseEntity baseEntity, Field field)

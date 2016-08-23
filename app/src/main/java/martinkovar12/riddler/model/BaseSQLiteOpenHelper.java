@@ -94,7 +94,7 @@ public class BaseSQLiteOpenHelper extends SQLiteOpenHelper
 				}
 				else
 				{
-					throw new IllegalStateException("Column '" + name + "' has invalid type: " + type);
+					throw new IllegalStateException("Column '" + name + "' has unsupported type: " + type);
 				}
 			}
 		}
